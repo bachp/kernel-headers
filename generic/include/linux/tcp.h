@@ -18,11 +18,9 @@
 #define _LINUX_TCP_H
 
 #include <linux/types.h>
-#include <linux/libc-compat.h>
 #include <asm/byteorder.h>
 #include <linux/socket.h>
 
-#if __UAPI_DEF_TCPHDR
 struct tcphdr {
 	__be16	source;
 	__be16	dest;
@@ -57,7 +55,6 @@ struct tcphdr {
 	__sum16	check;
 	__be16	urg_ptr;
 };
-#endif
 
 /*
  *	The union cast uses a gcc extension to avoid aliasing problems
@@ -189,6 +186,9 @@ struct tcp_info {
 	__u32	tcpi_rcv_space;
 
 	__u32	tcpi_total_retrans;
+
+	__u64	tcpi_pacing_rate;
+	__u64	tcpi_max_pacing_rate;
 };
 
 /* for TCP_MD5SIG socket option */

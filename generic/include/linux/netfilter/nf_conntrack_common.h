@@ -25,6 +25,10 @@ enum ip_conntrack_info {
 	IP_CT_NUMBER = IP_CT_IS_REPLY * 2 - 1
 };
 
+#define NF_CT_STATE_INVALID_BIT			(1 << 0)
+#define NF_CT_STATE_BIT(ctinfo)			(1 << ((ctinfo) % IP_CT_IS_REPLY + 1))
+#define NF_CT_STATE_UNTRACKED_BIT		(1 << (IP_CT_NUMBER + 1))
+
 /* Bitset representing status of connection. */
 enum ip_conntrack_status {
 	/* It's an expected connection: bit 0 set.  This bit never changed */
@@ -87,6 +91,15 @@ enum ip_conntrack_status {
 	/* Conntrack got a helper explicitly attached via CT target. */
 	IPS_HELPER_BIT = 13,
 	IPS_HELPER = (1 << IPS_HELPER_BIT),
+
+	/* Be careful here, modifying these bits can make things messy,
+	 * so don't let users modify them directly.
+	 */
+	IPS_UNCHANGEABLE_MASK = (IPS_NAT_DONE_MASK | IPS_NAT_MASK |
+				 IPS_EXPECTED | IPS_CONFIRMED | IPS_DYING |
+				 IPS_SEQ_ADJUST | IPS_TEMPLATE),
+
+	__IPS_MAX_BIT = 14,
 };
 
 /* Connection tracking event types */
